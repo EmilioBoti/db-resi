@@ -1,0 +1,124 @@
+CREATE TABLE residence(
+    id int not null PRIMARY KEY AUTO_INCREMENT,
+    name varchar(50) not null,
+    location varchar(40) not null,
+    continent varchar(40),
+    phone_number varchar(15),
+    description varchar(255),
+    email varchar(50),
+    link varchar(255) not null,
+    library boolean,
+    laundry boolean,
+    gym boolean,
+    parking_bicycle boolean,
+    parking_car boolean,
+    parking_motorcycle boolean,
+    id_city int not null
+);
+
+CREATE TABLE city(
+    id int not null PRIMARY KEY AUTO_INCREMENT,
+    name varchar(30) not null,
+    image varchar(255)
+);
+
+CREATE TABLE picturesResidence(
+    id_residence int not null,
+    image varchar(255)
+);
+
+CREATE TABLE room(
+    id int not null PRIMARY KEY AUTO_INCREMENT,
+    name varchar(25) NOT null,
+    available boolean,
+    id_type int not null,
+    size float
+);
+
+CREATE TABLE categories(
+    id int not null PRIMARY KEY AUTO_INCREMENT,
+    name varchar(30) not null,
+    id_father int not null,
+    pm boolean
+);
+
+CREATE TABLE message(
+    id int not null PRIMARY KEY AUTO_INCREMENT,
+    user_id int not null,
+    date_create date not null,
+    name varchar(20),
+    id_category int not null,
+    id_father int not null,
+    message varchar(255) not null
+);
+
+CREATE TABLE stackFavourite(
+    id_user int not null,
+    id_residence int,
+    id_room int
+);
+CREATE TABLE stackResiRooms(
+    id_residence int not null,
+    id_room int not null
+);
+
+CREATE TABLE room_type(
+    id int not null PRIMARY KEY AUTO_INCREMENT,
+    type varchar(30),
+    kitchen boolean,
+    bathroom boolean,
+    access_wheelchair boolean
+);
+CREATE TABLE picture_rooms(
+    id_room_type int not null,
+    image varchar(250)
+);
+
+CREATE TABLE users(
+    id int not null PRIMARY KEY AUTO_INCREMENT,
+    name varchar(30) not null,
+    email varchar(50) not null,
+    code_pass varchar(30) not null,
+    active boolean, 
+    socketid varchar(255) not null
+);	
+
+CREATE TABLE log_login(
+    id_user int not null,
+    date_create date not null
+);
+
+/*****/
+CREATE TABLE chat(
+    id_u_sender int not null,
+    id_u_receiver int not null,
+    message varchar(255) not null,
+    date date not null,
+    checked boolean
+);
+
+CREATE TABLE post(
+    id int not null PRIMARY KEY AUTO_INCREMENT,
+    id_user int not null,
+    id_residences int not null,
+    price int not null,
+    date_end date,
+    date_start date,
+    id_room int not null
+);
+
+ALTER TABLE residence ADD CONSTRAINT FK_city FOREIGN KEY(id_city) REFERENCES city(id);
+ALTER TABLE picturesResidence ADD CONSTRAINT FK_pictureResi FOREIGN KEY(id_residence) REFERENCES residence(id);
+ALTER TABLE room ADD CONSTRAINT FK_typeRoom FOREIGN KEY(id_type) REFERENCES room_type(id);
+ALTER TABLE stackFavourite ADD CONSTRAINT FK_userId FOREIGN KEY(id_user) REFERENCES users(id);
+ALTER TABLE stackFavourite ADD CONSTRAINT FK_residenceId FOREIGN KEY(id_residence) REFERENCES residence(id);
+ALTER TABLE stackFavourite ADD CONSTRAINT FK_roomId FOREIGN KEY(id_room) REFERENCES room(id);
+ALTER TABLE stackResiRooms ADD CONSTRAINT FK_residence_id FOREIGN KEY(id_residence) REFERENCES residence(id);
+ALTER TABLE stackResiRooms ADD CONSTRAINT FK_room_id FOREIGN KEY(id_room) REFERENCES room(id);
+ALTER TABLE picture_rooms ADD CONSTRAINT FK_room_type_id FOREIGN KEY(id_room_type) REFERENCES room_type(id);
+ALTER TABLE log_login ADD CONSTRAINT FK_login_log FOREIGN KEY(id_user) REFERENCES users(id);
+ALTER TABLE chat ADD CONSTRAINT FK_u_sender_id FOREIGN KEY(id_u_sender) REFERENCES users(id);
+ALTER TABLE chat ADD CONSTRAINT FK_u_receiver_id FOREIGN KEY(id_u_receiver) REFERENCES users(id);
+ALTER TABLE post ADD CONSTRAINT FK_user_id FOREIGN KEY(id_user) REFERENCES users(id);
+ALTER TABLE post ADD CONSTRAINT FK_resi_id FOREIGN KEY(id_residences) REFERENCES residence(id);
+ALTER TABLE post ADD CONSTRAINT FK_roomIdF FOREIGN KEY(id_room) REFERENCES room(id);
